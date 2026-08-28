@@ -121,6 +121,10 @@ function MovieCard({ movie, compact }) {
           ⭐ {movie.vote_average.toFixed(1)}/10
         </div>
 
+        <p className="movie-synopsis-preview">
+          {movie.overview ? movie.overview.substring(0, 100) + '...' : 'Sem descrição'}
+        </p>
+
         <div className="action-buttons">
           <button
             className={`action-btn ${isFav ? 'active' : ''}`}
