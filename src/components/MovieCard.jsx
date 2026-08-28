@@ -6,28 +6,27 @@ import { useRecommendations } from '../hooks/useRecommendations'
 import StreamingBadges from './StreamingBadges'
 import WatchlistButton from './WatchlistButton'
 import { RecommendationSection } from './RecommendationSection'
+import { RecommendDialog } from './RecommendDialog'
 import '../styles/movie-card.css'
 import '../styles/watchlist-button.css'
 import '../styles/recommendation-section.css'
+import '../styles/recommend-dialog.css'
 
 function MovieCard({ movie, compact }) {
   const [showDetails, setShowDetails] = useState(false)
+  const [showRecommendDialog, setShowRecommendDialog] = useState(false)
   const [isFav, setIsFav] = useState(false)
   const [isWatchlist, setIsWatchlist] = useState(false)
-  const [isRecommended, setIsRecommended] = useState(false)
   const [favLoading, setFavLoading] = useState(false)
   const [watchLoading, setWatchLoading] = useState(false)
-  const [recLoading, setRecLoading] = useState(false)
 
   const { user } = useContext(AuthContext)
   const { addFavorite, removeFavorite, isFavorite } = useFavorites()
   const { addToWatchlist, removeFromWatchlist } = useWatchlist()
-  const { addRecommendation, removeRecommendation, hasRecommended } = useRecommendations()
 
   useEffect(() => {
     if (user) {
       isFavorite(movie.id).then(setIsFav)
-      hasRecommended(movie.id).then(setIsRecommended)
     }
   }, [user, movie.id])
 
@@ -75,26 +74,12 @@ function MovieCard({ movie, compact }) {
     }
   }
 
-  const handleRecommend = async () => {
+  const handleRecommend = () => {
     if (!user) {
       alert('Faça login para recomendar!')
       return
     }
-
-    setRecLoading(true)
-    try {
-      if (isRecommended) {
-        await removeRecommendation(movie.id)
-        setIsRecommended(false)
-      } else {
-        await addRecommendation(movie.id, movie.media_type || 'movie')
-        setIsRecommended(true)
-      }
-    } catch (err) {
-      alert(err.message)
-    } finally {
-      setRecLoading(false)
-    }
+    setShowRecommendDialog(true)
   }
 
   const posterUrl = movie.poster_path
@@ -148,12 +133,11 @@ function MovieCard({ movie, compact }) {
             {isFav ? '❤️' : '🤍'}
           </button>
           <button
-            className={`action-btn recommend-btn ${isRecommended ? 'active' : ''}`}
+            className="action-btn recommend-btn"
             onClick={handleRecommend}
-            disabled={recLoading}
-            title={isRecommended ? 'Remover recomendação' : 'Recomendar'}
+            title="Recomendar para usuários"
           >
-            {isRecommended ? '👍' : '🤜'}
+            👍
           </button>
           <WatchlistButton movie={movie} />
         </div>
@@ -171,6 +155,13 @@ function MovieCard({ movie, compact }) {
           </div>
         )}
       </div>
+
+      {showRecommendDialog && (
+        <RecommendDialog
+          movie={movie}
+          onClose={() => setShowRecommendDialog(false)}
+        />
+      )}
     </div>
   )
 }

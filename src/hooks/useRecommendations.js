@@ -5,7 +5,7 @@ export function useRecommendations() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const addRecommendation = useCallback(async (movieId, mediaType = 'movie', comment = '') => {
+  const recommendToUser = useCallback(async (toUserId, movieId, mediaType = 'movie', message = '', fromUserName = '') => {
     try {
       setLoading(true);
       setError(null);
@@ -14,10 +14,12 @@ export function useRecommendations() {
       if (!user) throw new Error('Usuário não autenticado');
 
       const { error: err } = await supabase.from('recommendations').insert({
-        user_id: user.id,
+        from_user_id: user.id,
+        to_user_id: toUserId,
         movie_id: movieId,
         media_type: mediaType,
-        comment: comment || null,
+        message: message || null,
+        from_user_name: fromUserName || null,
       });
 
       if (err) throw err;
@@ -30,19 +32,15 @@ export function useRecommendations() {
     }
   }, []);
 
-  const removeRecommendation = useCallback(async (movieId) => {
+  const removeRecommendation = useCallback(async (recommendationId) => {
     try {
       setLoading(true);
       setError(null);
 
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error('Usuário não autenticado');
-
       const { error: err } = await supabase
         .from('recommendations')
         .delete()
-        .eq('user_id', user.id)
-        .eq('movie_id', movieId);
+        .eq('id', recommendationId);
 
       if (err) throw err;
       return true;
@@ -54,14 +52,38 @@ export function useRecommendations() {
     }
   }, []);
 
-  const getRecommendations = useCallback(async (movieId) => {
+  const getReceivedRecommendations = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return [];
+
+      const { data, error: err } = await supabase
+        .from('recommendations')
+        .select('id, from_user_id, movie_id, message, created_at')
+        .eq('to_user_id', user.id)
+        .order('created_at', { ascending: false });
+
+      if (err) throw err;
+      return data || [];
+    } catch (err) {
+      setError(err.message);
+      return [];
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const getMovieRecommendations = useCallback(async (movieId) => {
     try {
       setLoading(true);
       setError(null);
 
       const { data, error: err } = await supabase
         .from('recommendations')
-        .select('id, user_id, comment, created_at')
+        .select('id, from_user_id, message, created_at')
         .eq('movie_id', movieId)
         .order('created_at', { ascending: false });
 
@@ -75,30 +97,11 @@ export function useRecommendations() {
     }
   }, []);
 
-  const hasRecommended = useCallback(async (movieId) => {
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return false;
-
-      const { data, error: err } = await supabase
-        .from('recommendations')
-        .select('id')
-        .eq('user_id', user.id)
-        .eq('movie_id', movieId)
-        .single();
-
-      if (err && err.code !== 'PGRST116') throw err;
-      return !!data;
-    } catch (err) {
-      return false;
-    }
-  }, []);
-
   return {
-    addRecommendation,
+    recommendToUser,
     removeRecommendation,
-    getRecommendations,
-    hasRecommended,
+    getReceivedRecommendations,
+    getMovieRecommendations,
     loading,
     error,
   };
