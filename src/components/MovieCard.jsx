@@ -1,4 +1,5 @@
 import { useState, useContext, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { AuthContext } from '../contexts/AuthContext'
 import { useFavorites } from '../hooks/useFavorites'
 import { useWatchlist } from '../hooks/useWatchlist'
@@ -6,14 +7,13 @@ import { useRecommendations } from '../hooks/useRecommendations'
 import StreamingBadges from './StreamingBadges'
 import { RecommendationSection } from './RecommendationSection'
 import { RecommendDialog } from './RecommendDialog'
-import MovieDetails from './MovieDetails'
 import '../styles/movie-card.css'
 import '../styles/recommendation-section.css'
 import '../styles/recommend-dialog.css'
 
 function MovieCard({ movie, compact }) {
+  const navigate = useNavigate()
   const [showDetails, setShowDetails] = useState(false)
-  const [showFullDetails, setShowFullDetails] = useState(false)
   const [showRecommendDialog, setShowRecommendDialog] = useState(false)
   const [isFav, setIsFav] = useState(false)
   const [watchStatus, setWatchStatus] = useState(null)
@@ -90,7 +90,7 @@ function MovieCard({ movie, compact }) {
 
   return (
     <div className="movie-card">
-      <div className="movie-poster" onClick={() => setShowFullDetails(true)} style={{ cursor: 'pointer' }}>
+      <div className="movie-poster" onClick={() => navigate(`/movie/${movie.id}`)} style={{ cursor: 'pointer' }}>
         <img src={posterUrl} alt={movie.title} />
         <div className="movie-overlay">
           <button
@@ -182,14 +182,6 @@ function MovieCard({ movie, compact }) {
         <RecommendDialog
           movie={movie}
           onClose={() => setShowRecommendDialog(false)}
-        />
-      )}
-
-      {showFullDetails && (
-        <MovieDetails
-          movie={movie}
-          onClose={() => setShowFullDetails(false)}
-          tmdbApiKey={import.meta.env.VITE_TMDB_API_KEY}
         />
       )}
     </div>
