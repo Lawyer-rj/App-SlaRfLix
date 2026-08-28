@@ -32,7 +32,7 @@ function MovieDetailsPage() {
         let data = await res.json()
 
         // Se não encontrar, tenta como série
-        if (data.status_code === 34) {
+        if (data.status_code === 34 || !data.id) {
           url = `${API_BASE_URL}/tv/${id}?api_key=${tmdbApiKey}&language=pt-BR&append_to_response=credits`
           res = await fetch(url)
           data = await res.json()
@@ -41,22 +41,24 @@ function MovieDetailsPage() {
           data.media_type = 'movie'
         }
 
-        setDetails(data)
-        setMovie(data)
+        if (data.id) {
+          setDetails(data)
+          setMovie(data)
+        }
 
-        if (user) {
+        if (user && data.id) {
           const isFav = await isFavorite(id)
           setIsFav(isFav)
         }
-      } catch (err) {
-        console.error('Erro:', err)
       } finally {
         setLoading(false)
       }
     }
 
-    fetchMovie()
-  }, [id, tmdbApiKey, user])
+    if (tmdbApiKey) {
+      fetchMovie()
+    }
+  }, [id, tmdbApiKey])
 
   const handleFavorite = async () => {
     if (!user) {
