@@ -1,12 +1,10 @@
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import { supabase } from '../lib/supabase';
 
 export function useUsers() {
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const getAllUsers = useCallback(async () => {
-    setLoading(true);
+  const getAllUsers = async () => {
     setError(null);
 
     try {
@@ -24,10 +22,8 @@ export function useUsers() {
     } catch (err) {
       setError(err.message);
       return [];
-    } finally {
-      setLoading(false);
     }
-  }, []);
+  };
 
-  return { getAllUsers, loading, error };
+  return { getAllUsers, error };
 }

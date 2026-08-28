@@ -15,23 +15,15 @@ export function RecommendDialog({ movie, onClose }) {
   const [message, setMessage] = useState('');
 
   useEffect(() => {
-    let isMounted = true;
-
     const fetchUsers = async () => {
       setLoadingUsers(true);
       const data = await getAllUsers();
-      if (isMounted) {
-        setUsers(data);
-        setLoadingUsers(false);
-      }
+      setUsers(data);
+      setLoadingUsers(false);
     };
 
     fetchUsers();
-
-    return () => {
-      isMounted = false;
-    };
-  }, [getAllUsers]);
+  }, []);
 
   const toggleUser = (userId) => {
     setSelected(prev =>
