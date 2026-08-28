@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { Routes, Route } from 'react-router-dom'
 import { AuthContext } from './contexts/AuthContext'
 import MovieGrid from './components/MovieGrid'
 import Header from './components/Header'
@@ -185,12 +185,10 @@ function App() {
   const heroBannerMovie = searchResults.length > 0 ? searchResults[0] : popularMovies[0]
 
   return (
-    <Router>
-      <Routes>
-        <Route path="/movie/:id" element={<MovieDetailsPage />} />
-        <Route path="/" element={<AppHome />} />
-      </Routes>
-    </Router>
+    <Routes>
+      <Route path="/movie/:id" element={<MovieDetailsPage />} />
+      <Route path="/" element={<AppHome />} />
+    </Routes>
   )
 }
 
