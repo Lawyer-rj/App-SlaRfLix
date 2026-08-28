@@ -1,10 +1,23 @@
 .hero-banner {
-  height: 500px;
+  height: 600px;
   position: relative;
   display: flex;
   align-items: center;
-  margin-bottom: 40px;
+  margin-bottom: 50px;
   overflow: hidden;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+}
+
+.hero-banner::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 40%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(255, 0, 0, 0.1), transparent);
+  pointer-events: none;
 }
 
 .hero-overlay {
@@ -15,9 +28,9 @@
   height: 100%;
   background: linear-gradient(
     to right,
-    rgba(0, 0, 0, 0.8) 0%,
-    rgba(0, 0, 0, 0.4) 50%,
-    rgba(0, 0, 0, 0) 100%
+    rgba(0, 0, 0, 0.85) 0%,
+    rgba(0, 0, 0, 0.5) 50%,
+    rgba(0, 0, 0, 0.1) 100%
   );
 }
 

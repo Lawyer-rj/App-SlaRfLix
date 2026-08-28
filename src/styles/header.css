@@ -1,8 +1,13 @@
 .header {
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-  padding: 30px 0;
-  border-bottom: 2px solid #FF0000;
+  background: linear-gradient(135deg, #0f0f0f 0%, #1a1a2e 100%);
+  padding: 20px 0;
+  border-bottom: 3px solid #FF0000;
   margin-bottom: 40px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(10px);
 }
 
 .header-top {
