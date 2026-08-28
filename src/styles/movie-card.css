@@ -143,38 +143,56 @@
 }
 
 .action-buttons {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: auto auto;
+  display: flex;
   gap: 8px;
   margin-top: 10px;
   width: 100%;
+  justify-content: space-between;
 }
 
 .action-btn {
-  width: 100%;
+  width: 45px;
   height: 40px;
-  padding: 0 !important;
+  padding: 0;
   background: #333;
   border: 2px solid #555;
-  border-radius: 6px;
   cursor: pointer;
-  font-size: 1.2rem;
-  font-family: Arial, sans-serif;
-  line-height: 40px;
-  text-align: center;
-  vertical-align: middle;
+  font-size: 0;
   transition: all 0.2s ease;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: visible;
+}
+
+.action-btn::after {
+  content: attr(data-icon);
+  font-size: 1.2rem;
+  display: block;
+  line-height: 1;
+}
+
+.action-btn:nth-child(1) {
+  clip-path: polygon(50% 100%, 0% 0%, 100% 0%);
+}
+
+.action-btn:nth-child(2) {
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+}
+
+.action-btn:nth-child(3) {
+  clip-path: polygon(50% 100%, 0% 0%, 100% 0%);
+}
+
+.action-btn:nth-child(4) {
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
 }
 
 .action-btn:hover:not(:disabled) {
   background: #444;
   border-color: #FF0000;
-  transform: scale(1.05);
+  transform: scale(1.1);
 }
 
 .action-btn.active {
