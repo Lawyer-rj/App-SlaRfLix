@@ -1,4 +1,5 @@
 import { useState, useEffect, useContext } from 'react'
+import React from 'react'
 import { AuthContext } from '../contexts/AuthContext'
 import { useFavorites } from '../hooks/useFavorites'
 import { useWatchlist } from '../hooks/useWatchlist'
@@ -32,7 +33,6 @@ function MovieDetails({ movie, onClose, tmdbApiKey }) {
           setLoading(false)
         }
       } catch (err) {
-        console.error('Erro ao buscar detalhes:', err)
         if (mounted) setLoading(false)
       }
     }
@@ -193,4 +193,4 @@ function MovieDetails({ movie, onClose, tmdbApiKey }) {
   )
 }
 
-export default MovieDetails
+export default React.memo(MovieDetails)
