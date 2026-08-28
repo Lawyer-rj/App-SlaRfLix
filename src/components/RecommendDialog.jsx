@@ -23,7 +23,7 @@ export function RecommendDialog({ movie, onClose }) {
     };
 
     fetchUsers();
-  }, [getAllUsers]);
+  }, []);
 
   const toggleUser = (userId) => {
     setSelected(prev =>
