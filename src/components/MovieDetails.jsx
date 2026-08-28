@@ -19,26 +19,28 @@ function MovieDetails({ movie, onClose, tmdbApiKey }) {
   const isMovie = movie.media_type === 'movie'
 
   useEffect(() => {
+    let mounted = true
+
     const fetchDetails = async () => {
       try {
         const endpoint = isMovie ? 'movie' : 'tv'
         const url = `${API_BASE_URL}/${endpoint}/${movie.id}?api_key=${tmdbApiKey}&language=pt-BR&append_to_response=credits,videos`
         const res = await fetch(url)
         const data = await res.json()
-        setDetails(data)
+        if (mounted) {
+          setDetails(data)
+          setLoading(false)
+        }
       } catch (err) {
         console.error('Erro ao buscar detalhes:', err)
-      } finally {
-        setLoading(false)
+        if (mounted) setLoading(false)
       }
     }
 
     fetchDetails()
-  }, [movie.id, tmdbApiKey])
 
-  useEffect(() => {
-    if (user) {
-      isFavorite(movie.id).then(setIsFav)
+    return () => {
+      mounted = false
     }
   }, [])
 
