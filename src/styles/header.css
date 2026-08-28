@@ -13,8 +13,9 @@
 .header-top {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   margin-bottom: 30px;
+  gap: 20px;
 }
 
 .header-content {
@@ -22,9 +23,10 @@
 }
 
 .surf-logo {
-  height: 80px;
-  margin-bottom: 10px;
+  height: 120px;
+  margin-bottom: 15px;
   object-fit: contain;
+  width: 100%;
 }
 
 .tagline {
