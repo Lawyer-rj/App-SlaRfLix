@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useRecommendations } from '../hooks/useRecommendations';
+import { RecommendationThread } from './RecommendationThread';
 import '../styles/recommendation-section.css';
 
 export function RecommendationSection({ movieId }) {
   const { getMovieRecommendations } = useRecommendations();
   const [recommenders, setRecommenders] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [selectedThread, setSelectedThread] = useState(null);
 
   useEffect(() => {
     const fetchRecommendations = async () => {
@@ -22,20 +24,34 @@ export function RecommendationSection({ movieId }) {
   if (!recommenders.length) return null;
 
   return (
-    <div className="recommendation-section">
-      <div className="recommendation-header">
-        👍 Indicado por {recommenders.length} {recommenders.length === 1 ? 'pessoa' : 'pessoas'}
+    <>
+      <div className="recommendation-section">
+        <div className="recommendation-header">
+          👍 Indicado por {recommenders.length} {recommenders.length === 1 ? 'pessoa' : 'pessoas'}
+        </div>
+        <div className="recommendation-avatars">
+          {recommenders.slice(0, 5).map((rec, idx) => (
+            <button
+              key={rec.id}
+              className="recommendation-avatar"
+              title={rec.from_user_name}
+              onClick={() => setSelectedThread(rec)}
+            >
+              <span>{rec.from_user_name?.charAt(0)?.toUpperCase() || String.fromCharCode(65 + (idx % 26))}</span>
+            </button>
+          ))}
+          {recommenders.length > 5 && (
+            <div className="recommendation-avatar more">+{recommenders.length - 5}</div>
+          )}
+        </div>
       </div>
-      <div className="recommendation-avatars">
-        {recommenders.slice(0, 5).map((rec, idx) => (
-          <div key={rec.id} className="recommendation-avatar" title={rec.from_user_name}>
-            <span>{rec.from_user_name?.charAt(0)?.toUpperCase() || String.fromCharCode(65 + (idx % 26))}</span>
-          </div>
-        ))}
-        {recommenders.length > 5 && (
-          <div className="recommendation-avatar more">+{recommenders.length - 5}</div>
-        )}
-      </div>
-    </div>
+
+      {selectedThread && (
+        <RecommendationThread
+          recommendation={selectedThread}
+          onClose={() => setSelectedThread(null)}
+        />
+      )}
+    </>
   );
 }
