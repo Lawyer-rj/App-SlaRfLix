@@ -2,26 +2,32 @@ import { useState, useContext, useEffect } from 'react'
 import { AuthContext } from '../contexts/AuthContext'
 import { useFavorites } from '../hooks/useFavorites'
 import { useWatchlist } from '../hooks/useWatchlist'
+import { useRecommendations } from '../hooks/useRecommendations'
 import StreamingBadges from './StreamingBadges'
 import WatchlistButton from './WatchlistButton'
+import { RecommendationSection } from './RecommendationSection'
 import '../styles/movie-card.css'
 import '../styles/watchlist-button.css'
+import '../styles/recommendation-section.css'
 
 function MovieCard({ movie, compact }) {
   const [showDetails, setShowDetails] = useState(false)
   const [isFav, setIsFav] = useState(false)
   const [isWatchlist, setIsWatchlist] = useState(false)
+  const [isRecommended, setIsRecommended] = useState(false)
   const [favLoading, setFavLoading] = useState(false)
   const [watchLoading, setWatchLoading] = useState(false)
+  const [recLoading, setRecLoading] = useState(false)
 
   const { user } = useContext(AuthContext)
   const { addFavorite, removeFavorite, isFavorite } = useFavorites()
   const { addToWatchlist, removeFromWatchlist } = useWatchlist()
+  const { addRecommendation, removeRecommendation, hasRecommended } = useRecommendations()
 
-  // Verificar se é favorito ao carregar
   useEffect(() => {
     if (user) {
       isFavorite(movie.id).then(setIsFav)
+      hasRecommended(movie.id).then(setIsRecommended)
     }
   }, [user, movie.id])
 
@@ -66,6 +72,28 @@ function MovieCard({ movie, compact }) {
       alert(err.message)
     } finally {
       setWatchLoading(false)
+    }
+  }
+
+  const handleRecommend = async () => {
+    if (!user) {
+      alert('Faça login para recomendar!')
+      return
+    }
+
+    setRecLoading(true)
+    try {
+      if (isRecommended) {
+        await removeRecommendation(movie.id)
+        setIsRecommended(false)
+      } else {
+        await addRecommendation(movie.id, movie.media_type || 'movie')
+        setIsRecommended(true)
+      }
+    } catch (err) {
+      alert(err.message)
+    } finally {
+      setRecLoading(false)
     }
   }
 
@@ -119,6 +147,14 @@ function MovieCard({ movie, compact }) {
           >
             {isFav ? '❤️' : '🤍'}
           </button>
+          <button
+            className={`action-btn recommend-btn ${isRecommended ? 'active' : ''}`}
+            onClick={handleRecommend}
+            disabled={recLoading}
+            title={isRecommended ? 'Remover recomendação' : 'Recomendar'}
+          >
+            {isRecommended ? '👍' : '🤜'}
+          </button>
           <WatchlistButton movie={movie} />
         </div>
 
@@ -130,6 +166,8 @@ function MovieCard({ movie, compact }) {
               <h4>Onde assistir:</h4>
               <StreamingBadges providers={movie.providers} />
             </div>
+
+            <RecommendationSection movieId={movie.id} />
           </div>
         )}
       </div>
