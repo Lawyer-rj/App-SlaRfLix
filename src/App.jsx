@@ -70,8 +70,8 @@ function App() {
       const popularMovieData = await popularMovieRes.json()
       const popularTvData = await popularTvRes.json()
 
-      const moviesWithType = popularMovieData.results.slice(0, 5).map(m => ({ ...m, media_type: 'movie' }))
-      const tvWithType = popularTvData.results.slice(0, 5).map(t => ({ ...t, media_type: 'tv', release_date: t.first_air_date }))
+      const moviesWithType = popularMovieData.results.slice(0, 10).map(m => ({ ...m, media_type: 'movie' }))
+      const tvWithType = popularTvData.results.slice(0, 10).map(t => ({ ...t, media_type: 'tv', release_date: t.first_air_date }))
       const mixed = [...moviesWithType, ...tvWithType].sort(() => Math.random() - 0.5)
 
       const popularWithProviders = await fetchWithProviders(mixed)
@@ -88,8 +88,8 @@ function App() {
       const newMovieData = await newMovieRes.json()
       const newTvData = await newTvRes.json()
 
-      const newMoviesWithType = newMovieData.results.slice(0, 5).map(m => ({ ...m, media_type: 'movie' }))
-      const newTvWithType = newTvData.results.slice(0, 5).map(t => ({ ...t, media_type: 'tv', release_date: t.first_air_date }))
+      const newMoviesWithType = newMovieData.results.slice(0, 10).map(m => ({ ...m, media_type: 'movie' }))
+      const newTvWithType = newTvData.results.slice(0, 10).map(t => ({ ...t, media_type: 'tv', release_date: t.first_air_date }))
       const mixedNew = [...newMoviesWithType, ...newTvWithType].sort(() => Math.random() - 0.5)
 
       const newWithProviders = await fetchWithProviders(mixedNew)
@@ -106,8 +106,8 @@ function App() {
       const topMovieData = await topMovieRes.json()
       const topTvData = await topTvRes.json()
 
-      const topMoviesWithType = topMovieData.results.slice(0, 5).map(m => ({ ...m, media_type: 'movie' }))
-      const topTvWithType = topTvData.results.slice(0, 5).map(t => ({ ...t, media_type: 'tv', release_date: t.first_air_date }))
+      const topMoviesWithType = topMovieData.results.slice(0, 10).map(m => ({ ...m, media_type: 'movie' }))
+      const topTvWithType = topTvData.results.slice(0, 10).map(t => ({ ...t, media_type: 'tv', release_date: t.first_air_date }))
       const mixedTop = [...topMoviesWithType, ...topTvWithType].sort(() => Math.random() - 0.5)
 
       const topWithProviders = await fetchWithProviders(mixedTop)
