@@ -59,10 +59,10 @@ function App() {
     setError(null)
 
     try {
-      // Fetch multiple pages (10 pages = ~200 items per category)
+      // Fetch multiple pages (20 pages = ~400 items per category)
       const fetchMultiplePages = async (baseUrl, type) => {
         const allResults = []
-        const pages = 10
+        const pages = 20
 
         for (let i = 1; i <= pages; i++) {
           try {
@@ -94,7 +94,6 @@ function App() {
       const mixed = [...moviesWithType, ...tvWithType]
         .filter(item => item.poster_path)
         .sort(() => Math.random() - 0.5)
-        .slice(0, 200)
 
       const popularWithProviders = await fetchWithProviders(mixed)
       setPopularMovies(popularWithProviders)
@@ -111,7 +110,6 @@ function App() {
       const mixedNew = [...newMoviesWithType2, ...newTvWithType2]
         .filter(item => item.poster_path)
         .sort(() => Math.random() - 0.5)
-        .slice(0, 200)
 
       const newWithProviders = await fetchWithProviders(mixedNew)
       setNewMovies(newWithProviders)
@@ -128,7 +126,6 @@ function App() {
       const mixedTop = [...topMoviesWithType2, ...topTvWithType2]
         .filter(item => item.poster_path)
         .sort(() => Math.random() - 0.5)
-        .slice(0, 200)
 
       const topWithProviders = await fetchWithProviders(mixedTop)
       setTopRatedMovies(topWithProviders)
