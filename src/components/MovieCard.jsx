@@ -4,11 +4,9 @@ import { useFavorites } from '../hooks/useFavorites'
 import { useWatchlist } from '../hooks/useWatchlist'
 import { useRecommendations } from '../hooks/useRecommendations'
 import StreamingBadges from './StreamingBadges'
-import WatchlistButton from './WatchlistButton'
 import { RecommendationSection } from './RecommendationSection'
 import { RecommendDialog } from './RecommendDialog'
 import '../styles/movie-card.css'
-import '../styles/watchlist-button.css'
 import '../styles/recommendation-section.css'
 import '../styles/recommend-dialog.css'
 
@@ -16,7 +14,7 @@ function MovieCard({ movie, compact }) {
   const [showDetails, setShowDetails] = useState(false)
   const [showRecommendDialog, setShowRecommendDialog] = useState(false)
   const [isFav, setIsFav] = useState(false)
-  const [isWatchlist, setIsWatchlist] = useState(false)
+  const [watchStatus, setWatchStatus] = useState(null)
   const [favLoading, setFavLoading] = useState(false)
   const [watchLoading, setWatchLoading] = useState(false)
 
@@ -52,7 +50,7 @@ function MovieCard({ movie, compact }) {
     }
   }
 
-  const handleWatchlist = async () => {
+  const handleWatchStatus = async (newStatus) => {
     if (!user) {
       alert('Faça login para adicionar à watchlist!')
       return
@@ -60,12 +58,12 @@ function MovieCard({ movie, compact }) {
 
     setWatchLoading(true)
     try {
-      if (isWatchlist) {
+      if (watchStatus === newStatus) {
         await removeFromWatchlist(movie.id)
-        setIsWatchlist(false)
+        setWatchStatus(null)
       } else {
-        await addToWatchlist(movie.id, movie.title, movie.poster_path)
-        setIsWatchlist(true)
+        await addToWatchlist(movie.id, movie.title, movie.poster_path, newStatus)
+        setWatchStatus(newStatus)
       }
     } catch (err) {
       alert(err.message)
@@ -125,7 +123,7 @@ function MovieCard({ movie, compact }) {
 
         <div className="action-buttons">
           <button
-            className={`action-btn favorite-btn ${isFav ? 'active' : ''}`}
+            className={`action-btn ${isFav ? 'active' : ''}`}
             onClick={handleFavorite}
             disabled={favLoading}
             title={isFav ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}
@@ -133,13 +131,28 @@ function MovieCard({ movie, compact }) {
             {isFav ? '❤️' : '🤍'}
           </button>
           <button
-            className="action-btn recommend-btn"
+            className="action-btn"
             onClick={handleRecommend}
             title="Recomendar para usuários"
           >
             👍
           </button>
-          <WatchlistButton movie={movie} />
+          <button
+            className={`action-btn ${watchStatus === 'want_to_watch' ? 'active' : ''}`}
+            onClick={() => handleWatchStatus('want_to_watch')}
+            disabled={watchLoading || !user}
+            title="Quer assistir"
+          >
+            📺
+          </button>
+          <button
+            className={`action-btn ${watchStatus === 'watched' ? 'active' : ''}`}
+            onClick={() => handleWatchStatus('watched')}
+            disabled={watchLoading || !user}
+            title="Já assistiu"
+          >
+            ✅
+          </button>
         </div>
 
         {showDetails && (

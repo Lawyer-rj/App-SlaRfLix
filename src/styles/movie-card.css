@@ -144,33 +144,27 @@
 
 .action-buttons {
   display: flex;
-  gap: 8px;
+  gap: 6px;
   margin-top: 10px;
   width: 100%;
   justify-content: space-between;
 }
 
 .action-btn {
+  flex: 1;
   width: 45px;
   height: 40px;
   padding: 0;
   background: #333;
   border: 2px solid #555;
   cursor: pointer;
-  font-size: 0;
+  font-size: 1.2rem;
   transition: all 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
-  overflow: visible;
-}
-
-.action-btn::after {
-  content: attr(data-icon);
-  font-size: 1.2rem;
-  display: block;
-  line-height: 1;
+  overflow: hidden;
 }
 
 .action-btn:nth-child(1) {
@@ -192,15 +186,15 @@
 .action-btn:hover:not(:disabled) {
   background: #444;
   border-color: #FF0000;
-  transform: scale(1.1);
+  transform: scale(1.12);
 }
 
 .action-btn.active {
   border-color: #FF0000;
-  background: rgba(255, 0, 0, 0.1);
+  background: rgba(255, 0, 0, 0.2);
 }
 
 .action-btn:disabled {
-  opacity: 0.6;
+  opacity: 0.5;
   cursor: not-allowed;
 }
