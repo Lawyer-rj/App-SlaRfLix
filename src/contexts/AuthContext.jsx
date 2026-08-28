@@ -29,6 +29,18 @@ export function AuthProvider({ children }) {
       if (error) throw new Error(error.message)
 
       setUser(data.user)
+
+      // Create user profile in public.users table
+      if (data.user) {
+        const { error: profileError } = await supabase.from('users').insert({
+          id: data.user.id,
+          full_name: name,
+          email: email
+        })
+
+        if (profileError) console.warn('Erro ao criar perfil:', profileError)
+      }
+
       return { success: true }
     } catch (err) {
       return { success: false, error: err.message }

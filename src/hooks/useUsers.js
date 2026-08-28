@@ -14,10 +14,10 @@ export function useUsers() {
       if (!currentUser) throw new Error('Usuário não autenticado');
 
       const { data, error: err } = await supabase
-        .from('auth.users')
-        .select('id, user_metadata->full_name as full_name')
+        .from('users')
+        .select('id, full_name')
         .neq('id', currentUser.id)
-        .order('user_metadata->full_name');
+        .order('full_name');
 
       if (err) throw err;
       return data || [];
