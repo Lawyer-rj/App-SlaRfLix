@@ -35,16 +35,16 @@
   border: 2px solid rgba(255, 0, 0, 0.5);
   padding: 0;
   flex-shrink: 0;
+}
 
-  &:hover {
-    transform: scale(1.15);
-    border-color: #FF0000;
-    box-shadow: 0 0 12px rgba(255, 0, 0, 0.4);
-  }
+.recommendation-avatar:hover {
+  transform: scale(1.15);
+  border-color: #FF0000;
+  box-shadow: 0 0 12px rgba(255, 0, 0, 0.4);
+}
 
-  &:active {
-    transform: scale(0.95);
-  }
+.recommendation-avatar:active {
+  transform: scale(0.95);
 }
 
 .recommendation-avatar.more {
@@ -52,8 +52,8 @@
   border-color: #FF0000;
   font-size: 0.75rem;
   cursor: default;
+}
 
-  &:hover {
-    transform: none;
-  }
+.recommendation-avatar.more:hover {
+  transform: none;
 }
