@@ -34,11 +34,13 @@ function MovieDetails({ movie, onClose, tmdbApiKey }) {
     }
 
     fetchDetails()
+  }, [movie.id, tmdbApiKey])
 
+  useEffect(() => {
     if (user) {
       isFavorite(movie.id).then(setIsFav)
     }
-  }, [movie.id, tmdbApiKey, user])
+  }, [])
 
   const handleFavorite = async () => {
     if (!user) {
