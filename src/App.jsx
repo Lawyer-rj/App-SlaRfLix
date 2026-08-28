@@ -234,7 +234,7 @@ function App() {
               {!searchQuery && (
                 <>
                   {homeTab === 'popular' && heroBannerMovie && (
-                    <HeroBanner movie={heroBannerMovie} />
+                    <HeroBanner movie={heroBannerMovie} tmdbApiKey={TMDB_API_KEY} />
                   )}
 
                   <HomeTabs
