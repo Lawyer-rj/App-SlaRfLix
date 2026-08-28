@@ -59,56 +59,76 @@ function App() {
     setError(null)
 
     try {
+      // Fetch multiple pages (10 pages = ~200 items per category)
+      const fetchMultiplePages = async (baseUrl, type) => {
+        const allResults = []
+        const pages = 10
+
+        for (let i = 1; i <= pages; i++) {
+          try {
+            const url = `${baseUrl}&page=${i}`
+            const res = await fetch(url)
+            const data = await res.json()
+            const withType = data.results.map(item => ({
+              ...item,
+              media_type: type,
+              release_date: type === 'tv' ? item.first_air_date : item.release_date
+            }))
+            allResults.push(...withType)
+          } catch (err) {
+            console.warn(`Erro ao buscar página ${i}:`, err)
+          }
+        }
+        return allResults
+      }
+
       // Populares (Filmes + Séries)
-      const popularMovieUrl = `${API_BASE_URL}/discover/movie?api_key=${TMDB_API_KEY}&language=pt-BR&region=BR&sort_by=popularity.desc&page=1`
-      const popularTvUrl = `${API_BASE_URL}/discover/tv?api_key=${TMDB_API_KEY}&language=pt-BR&sort_by=popularity.desc&page=1`
+      const popularMovieUrl = `${API_BASE_URL}/discover/movie?api_key=${TMDB_API_KEY}&language=pt-BR&region=BR&sort_by=popularity.desc`
+      const popularTvUrl = `${API_BASE_URL}/discover/tv?api_key=${TMDB_API_KEY}&language=pt-BR&sort_by=popularity.desc`
 
-      const [popularMovieRes, popularTvRes] = await Promise.all([
-        fetch(popularMovieUrl),
-        fetch(popularTvUrl)
+      const [moviesWithType, tvWithType] = await Promise.all([
+        fetchMultiplePages(popularMovieUrl, 'movie'),
+        fetchMultiplePages(popularTvUrl, 'tv')
       ])
-      const popularMovieData = await popularMovieRes.json()
-      const popularTvData = await popularTvRes.json()
 
-      const moviesWithType = popularMovieData.results.slice(0, 10).map(m => ({ ...m, media_type: 'movie' }))
-      const tvWithType = popularTvData.results.slice(0, 10).map(t => ({ ...t, media_type: 'tv', release_date: t.first_air_date }))
-      const mixed = [...moviesWithType, ...tvWithType].sort(() => Math.random() - 0.5)
+      const mixed = [...moviesWithType, ...tvWithType]
+        .filter(item => item.poster_path)
+        .sort(() => Math.random() - 0.5)
+        .slice(0, 200)
 
       const popularWithProviders = await fetchWithProviders(mixed)
       setPopularMovies(popularWithProviders)
 
       // Novos lançamentos (Filmes + Séries)
-      const newMovieUrl = `${API_BASE_URL}/discover/movie?api_key=${TMDB_API_KEY}&language=pt-BR&region=BR&sort_by=release_date.desc&page=1`
-      const newTvUrl = `${API_BASE_URL}/discover/tv?api_key=${TMDB_API_KEY}&language=pt-BR&sort_by=first_air_date.desc&page=1`
+      const newMovieUrl = `${API_BASE_URL}/discover/movie?api_key=${TMDB_API_KEY}&language=pt-BR&region=BR&sort_by=release_date.desc`
+      const newTvUrl = `${API_BASE_URL}/discover/tv?api_key=${TMDB_API_KEY}&language=pt-BR&sort_by=first_air_date.desc`
 
-      const [newMovieRes, newTvRes] = await Promise.all([
-        fetch(newMovieUrl),
-        fetch(newTvUrl)
+      const [newMoviesWithType2, newTvWithType2] = await Promise.all([
+        fetchMultiplePages(newMovieUrl, 'movie'),
+        fetchMultiplePages(newTvUrl, 'tv')
       ])
-      const newMovieData = await newMovieRes.json()
-      const newTvData = await newTvRes.json()
 
-      const newMoviesWithType = newMovieData.results.slice(0, 10).map(m => ({ ...m, media_type: 'movie' }))
-      const newTvWithType = newTvData.results.slice(0, 10).map(t => ({ ...t, media_type: 'tv', release_date: t.first_air_date }))
-      const mixedNew = [...newMoviesWithType, ...newTvWithType].sort(() => Math.random() - 0.5)
+      const mixedNew = [...newMoviesWithType2, ...newTvWithType2]
+        .filter(item => item.poster_path)
+        .sort(() => Math.random() - 0.5)
+        .slice(0, 200)
 
       const newWithProviders = await fetchWithProviders(mixedNew)
       setNewMovies(newWithProviders)
 
       // Top Rated (Filmes + Séries)
-      const topMovieUrl = `${API_BASE_URL}/discover/movie?api_key=${TMDB_API_KEY}&language=pt-BR&region=BR&sort_by=vote_average.desc&vote_count.gte=1000&page=1`
-      const topTvUrl = `${API_BASE_URL}/discover/tv?api_key=${TMDB_API_KEY}&language=pt-BR&sort_by=vote_average.desc&vote_count.gte=100&page=1`
+      const topMovieUrl = `${API_BASE_URL}/discover/movie?api_key=${TMDB_API_KEY}&language=pt-BR&region=BR&sort_by=vote_average.desc&vote_count.gte=1000`
+      const topTvUrl = `${API_BASE_URL}/discover/tv?api_key=${TMDB_API_KEY}&language=pt-BR&sort_by=vote_average.desc&vote_count.gte=100`
 
-      const [topMovieRes, topTvRes] = await Promise.all([
-        fetch(topMovieUrl),
-        fetch(topTvUrl)
+      const [topMoviesWithType2, topTvWithType2] = await Promise.all([
+        fetchMultiplePages(topMovieUrl, 'movie'),
+        fetchMultiplePages(topTvUrl, 'tv')
       ])
-      const topMovieData = await topMovieRes.json()
-      const topTvData = await topTvRes.json()
 
-      const topMoviesWithType = topMovieData.results.slice(0, 10).map(m => ({ ...m, media_type: 'movie' }))
-      const topTvWithType = topTvData.results.slice(0, 10).map(t => ({ ...t, media_type: 'tv', release_date: t.first_air_date }))
-      const mixedTop = [...topMoviesWithType, ...topTvWithType].sort(() => Math.random() - 0.5)
+      const mixedTop = [...topMoviesWithType2, ...topTvWithType2]
+        .filter(item => item.poster_path)
+        .sort(() => Math.random() - 0.5)
+        .slice(0, 200)
 
       const topWithProviders = await fetchWithProviders(mixedTop)
       setTopRatedMovies(topWithProviders)
