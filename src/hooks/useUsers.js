@@ -6,10 +6,10 @@ export function useUsers() {
   const [error, setError] = useState(null);
 
   const getAllUsers = useCallback(async () => {
-    try {
-      setLoading(true);
-      setError(null);
+    setLoading(true);
+    setError(null);
 
+    try {
       const { data: { user: currentUser } } = await supabase.auth.getUser();
       if (!currentUser) throw new Error('Usuário não autenticado');
 
