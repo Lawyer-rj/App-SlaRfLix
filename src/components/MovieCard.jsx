@@ -90,7 +90,20 @@ function MovieCard({ movie, compact }) {
       </div>
 
       <div className="movie-info">
-        <h3 className="movie-title">{movie.title}</h3>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+          <h3 className="movie-title">{movie.title || movie.name}</h3>
+          <span className="media-badge" style={{
+            background: movie.media_type === 'tv' ? '#00a8ff' : '#FF0000',
+            color: '#fff',
+            padding: '4px 8px',
+            borderRadius: '4px',
+            fontSize: '0.75rem',
+            fontWeight: 'bold',
+            whiteSpace: 'nowrap'
+          }}>
+            {movie.media_type === 'tv' ? 'Série' : 'Filme'}
+          </span>
+        </div>
         <p className="movie-year">{year}</p>
 
         <div className="rating">
