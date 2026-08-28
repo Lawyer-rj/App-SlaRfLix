@@ -1,0 +1,67 @@
+.streaming-badges {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.provider-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.provider-type {
+  font-size: 0.7rem;
+  color: #999;
+  font-weight: 600;
+  text-transform: uppercase;
+  min-width: 55px;
+}
+
+.badges {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.badge {
+  display: inline-block;
+  padding: 4px 8px;
+  background: #FF0000;
+  color: #000;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: #FF3333;
+    transform: scale(1.05);
+  }
+}
+
+.badge-rent {
+  background: #ffc107;
+  color: #000;
+
+  &:hover {
+    background: #ffdb31;
+  }
+}
+
+.badge-buy {
+  background: #6c757d;
+  color: #fff;
+
+  &:hover {
+    background: #7d8a96;
+  }
+}
+
+.no-providers {
+  font-size: 0.8rem;
+  color: #666;
+  font-style: italic;
+}
