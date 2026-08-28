@@ -15,13 +15,6 @@ export function RecommendDialog({ movie, onClose }) {
   const [message, setMessage] = useState('');
 
   useEffect(() => {
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
-  }, []);
-
-  useEffect(() => {
     const fetchUsers = async () => {
       setLoadingUsers(true);
       const data = await getAllUsers();

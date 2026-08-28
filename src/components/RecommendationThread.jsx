@@ -11,13 +11,6 @@ export function RecommendationThread({ recommendation, onClose }) {
   const [loadingComments, setLoadingComments] = useState(true);
 
   useEffect(() => {
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
-  }, []);
-
-  useEffect(() => {
     const fetchComments = async () => {
       setLoadingComments(true);
       const data = await getComments(recommendation.id);
