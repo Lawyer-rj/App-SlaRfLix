@@ -103,11 +103,28 @@ function MovieDetailsPage() {
   }
 
   if (loading) {
-    return <div className="details-page-loading">Carregando...</div>
+    return (
+      <div className="details-page">
+        <button className="back-btn" onClick={() => navigate(-1)}>← Voltar</button>
+        <div className="details-page-loading">
+          <div className="spinner"></div>
+          <p>Carregando detalhes do filme...</p>
+        </div>
+      </div>
+    )
   }
 
-  if (!movie) {
-    return <div className="details-page-error">Filme não encontrado</div>
+  if (!movie || !details) {
+    return (
+      <div className="details-page">
+        <button className="back-btn" onClick={() => navigate(-1)}>← Voltar</button>
+        <div className="details-page-error">
+          <p>Não conseguimos carregar os detalhes do filme.</p>
+          <p>ID: {id}</p>
+          <button onClick={() => window.location.reload()}>Tentar novamente</button>
+        </div>
+      </div>
+    )
   }
 
   const year = new Date(movie.release_date || movie.first_air_date).getFullYear()
